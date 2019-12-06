@@ -23,8 +23,12 @@ Log::Log(const std::string& dir,const std::string&fname,int loglevel,int newhour
 	_lockfile = "log.lock";
 	if(newhour!=-1)
 	{
-		_expires_time = set_expires_time();  //设置转储时间
+	    _expires_time = set_expires_time();  //设置转储时间
 	}
+        else
+        {
+          _expires_time=-1;
+        }
 	plockinit();   //初始化文件锁
 	openlog();
 
@@ -130,7 +134,7 @@ time_t Log::set_expires_time()
 int Log::daily_autosplit()
 {
 
-  if(difftime(time(0),set_expires_time())<0)  //如果还没有到转储时间就返回
+  if(difftime(time(0),_expires_time)<0)  //如果还没有到转储时间就返回
   {
   	return 0;
   }
